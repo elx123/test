@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	config := bluge.DefaultConfig("path")
+	config := bluge.InMemoryOnlyConfig()
 	writer, err := bluge.OpenWriter(config)
 	if err != nil {
 		log.Fatalf("error opening writer: %v", err)
@@ -31,8 +31,7 @@ func main() {
 	defer reader.Close()
 
 	query := bluge.NewMatchQuery("bluge").SetField("name")
-	request := bluge.NewTopNSearch(10, query).
-		WithStandardAggregations()
+	request := bluge.NewTopNSearch(10, query).WithStandardAggregations()
 	documentMatchIterator, err := reader.Search(context.Background(), request)
 	if err != nil {
 		log.Fatalf("error executing search: %v", err)
@@ -40,9 +39,8 @@ func main() {
 	match, err := documentMatchIterator.Next()
 	for err == nil && match != nil {
 		err = match.VisitStoredFields(func(field string, value []byte) bool {
-			if field == "_id" {
-				fmt.Printf("match: %s\n", string(value))
-			}
+			fmt.Printf("field name: %s, field value: %s \n", field, string(value))
+
 			return true
 		})
 		if err != nil {
