@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/blugelabs/bluge"
+	"github.com/blugelabs/bluge/analysis/analyzer"
 	querystr "github.com/blugelabs/query_string"
 )
 
@@ -20,10 +21,15 @@ func main() {
 	doc := bluge.NewDocument("example").
 		AddField(bluge.NewTextField("name", "bluge"))
 
+	doc2 := bluge.NewDocument("example2").
+		AddField(bluge.NewTextField("name2", "bluge2"))
+
 	err = writer.Update(doc.ID(), doc)
 	if err != nil {
 		log.Fatalf("error updating document: %v", err)
 	}
+
+	writer.Update(doc2.ID(), doc2)
 
 	reader, err := writer.Reader()
 	if err != nil {
@@ -31,12 +37,15 @@ func main() {
 	}
 	defer reader.Close()
 
-	q, err := querystr.ParseQueryString("name:bluge", querystr.DefaultOptions())
+	query, err := querystr.ParseQueryString("name:bluge", querystr.DefaultOptions().WithDefaultAnalyzer(analyzer.NewKeywordAnalyzer()))
 	if err != nil {
 		fmt.Println("error parsing query string:", err)
 		return
 	}
-	request := bluge.NewTopNSearch(10, q).
+
+	//query := bluge.NewMatchQuery("bluge").SetAnalyzer(analyzer.NewKeywordAnalyzer())
+
+	request := bluge.NewTopNSearch(10, query).
 		WithStandardAggregations()
 	documentMatchIterator, err := reader.Search(context.Background(), request)
 	if err != nil {
@@ -45,9 +54,8 @@ func main() {
 	match, err := documentMatchIterator.Next()
 	for err == nil && match != nil {
 		err = match.VisitStoredFields(func(field string, value []byte) bool {
-			if field == "_id" {
-				fmt.Printf("match: %s\n", string(value))
-			}
+			fmt.Printf("match ID: %s,match value: %s\n", field, string(value))
+
 			return true
 		})
 		if err != nil {

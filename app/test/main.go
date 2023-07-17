@@ -13,6 +13,6 @@ func main() {
 		fmt.Println("error parsing query string:", err)
 		return
 	}
-
+	
 	fmt.Println(q)
 }
