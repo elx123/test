@@ -18,7 +18,7 @@ func main() {
 
 	// 创建ecsClient实例
 	alimtClient, err := alimt.NewClientWithAccessKey(
-		"cn-hangzhou",                    // 地域ID
+		"mt.cn-hangzhou.aliyuncs.com",    // 地域ID
 		"LTAI5tDh4za5UkS3cM3Yc4Cp",       // 您的Access Key ID
 		"9rxhHSvdLjMuQO09W8OrsSx94WZxUX") // 您的Access Key Secret
 	if err != nil {
