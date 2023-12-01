@@ -8,6 +8,7 @@ require (
 	github.com/alibabacloud-go/tea v1.2.1
 	github.com/alibabacloud-go/tea-utils/v2 v2.0.4
 	github.com/aliyun/alibaba-cloud-sdk-go v1.62.358
+	github.com/ardanlabs/conf/v2 v2.2.0
 	github.com/blugelabs/bluge v0.2.2
 	github.com/blugelabs/query_string v0.3.0
 	golang.design/x/clipboard v0.7.0
