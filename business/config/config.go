@@ -11,21 +11,10 @@ var build = "develop"
 
 type Config struct {
 	conf.Version
-	Socket  *SocketConfig  `yaml:"socket" json:"socket" usage:"Socket configuration."`
-	Session *SessionConfig `yaml:"session" json:"session" usage:"Session authentication settings."`
-	Db      *DB
+	Db db
 }
 
-// SocketConfig is configuration relevant to the transport socket and protocol.
-type SocketConfig struct {
-}
-
-// SessionConfig is configuration relevant to the session.
-type SessionConfig struct {
-	SingleSocket bool `yaml:"single_socket" json:"single_socket" usage:"Only allow one socket per user. Older sessions are disconnected. Default false."`
-}
-
-type DB struct {
+type db struct {
 	User         string `conf:"default:postgres"`
 	Password     string `conf:"default:postgres,mask"`
 	Host         string `conf:"default:localhost"`
@@ -35,18 +24,18 @@ type DB struct {
 	DisableTLS   bool   `conf:"default:true"`
 }
 
-func NewSocketConfig() *SocketConfig {
-	return &SocketConfig{}
-}
+// NewConfig constructs a Config struct which represents server settings, and populates it with default values.
+func NewConfig() (*Config, error) {
+	cfg := Config{
+		Version: conf.Version{
+			Build: build,
+			Desc:  "copyright information here",
+		},
+		Db: db{},
+	}
 
-func NewSessionConfig() *SessionConfig {
-	return &SessionConfig{}
-}
-
-func NewDBConfig() (*DB, error) {
-	db := DB{}
-	const prefix = "DbConfig"
-	help, err := conf.Parse(prefix, &db)
+	const prefix = "Test"
+	help, err := conf.Parse(prefix, &cfg)
 	if err != nil {
 		if errors.Is(err, conf.ErrHelpWanted) {
 			fmt.Println(help)
@@ -54,33 +43,6 @@ func NewDBConfig() (*DB, error) {
 		}
 		return nil, fmt.Errorf("parsing config: %w", err)
 	}
-	return &db, nil
-}
 
-// NewConfig constructs a Config struct which represents server settings, and populates it with default values.
-func NewConfig() (*Config, error) {
-	dbconfig, err := NewDBConfig()
-	if err != nil {
-		return nil, err
-	}
-	config := Config{
-		Version: conf.Version{
-			Build: build,
-			Desc:  "copyright information here",
-		},
-		Db: dbconfig,
-	}
-	return &config, nil
-}
-
-func (c *Config) GetSocket() *SocketConfig {
-	return c.Socket
-}
-
-func (c *Config) GetSession() *SessionConfig {
-	return c.Session
-}
-
-func (c *Config) GetDb() *DB {
-	return c.Db
+	return &cfg, nil
 }

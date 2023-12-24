@@ -11,6 +11,8 @@ require (
 	github.com/ardanlabs/conf/v2 v2.2.0
 	github.com/blugelabs/bluge v0.2.2
 	github.com/blugelabs/query_string v0.3.0
+	github.com/kelseyhightower/envconfig v1.4.0
+	go.uber.org/zap v1.26.0
 	golang.design/x/clipboard v0.7.0
 )
 
@@ -50,6 +52,7 @@ require (
 	github.com/opentracing/opentracing-go v1.2.1-0.20220228012449-10b1cf09e00b // indirect
 	github.com/stretchr/testify v1.8.4 // indirect
 	github.com/tjfoc/gmsm v1.3.2 // indirect
+	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/exp v0.0.0-20190731235908-ec7cb31e5a56 // indirect
 	golang.org/x/image v0.6.0 // indirect
 	golang.org/x/mobile v0.0.0-20230301163155-e0f57694e12c // indirect
