@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"runtime"
 )
-asfsdfsd
+
 func CallersTest() {
 	pc := make([]uintptr, 32)
 	n := runtime.Callers(2, pc)
